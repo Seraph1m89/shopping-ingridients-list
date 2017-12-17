@@ -1,0 +1,12 @@
+<app-header 
+(switchList)="onSwitchList($event)"
+></app-header>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+                <!-- <app-recipes *ngIf="selectedList === 'recipes'"></app-recipes>
+                <app-shopping-list *ngIf="selectedList === 'shopping'"></app-shopping-list> -->
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
