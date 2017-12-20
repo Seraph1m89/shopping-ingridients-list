@@ -23,7 +23,7 @@ export class RecipeNewComponent implements OnInit, FormInitizable, Submittable {
 
   onSubmit() {
     var recipe = this.addRecipe(this.recipeForm.value);
-    this.navigateToDetails(recipe.id);
+    
   }
 
   initializeForm() {
@@ -35,20 +35,16 @@ export class RecipeNewComponent implements OnInit, FormInitizable, Submittable {
     });
   }
 
-  navigateToDetails(id: number) {
+  navigateToDetails(id) {
     this._router.navigate(['/recipes', id]);
   }
 
-  onAddIngridient() {
-    (<FormArray>this.recipeForm.get('ingredients')).push(
-      new FormGroup({
-        'name': new FormControl(null, Validators.required),
-        'amount': new FormControl(null, Validators.required)
-      }));
+  onAddIngredient() {
+    (<FormArray>this.recipeForm.get('ingredients')).push(this.createIngredientForm(null, null));
   }
 
-  private addRecipe(recipe: Recipe): Recipe {
-    return this._recipeService.addRecipe(recipe);
+  private addRecipe(recipe: Recipe) {
+    this._recipeService.addRecipe(recipe).subscribe((id) => this.navigateToDetails(id));
   }
 
   onDeleteIngredient(index: number) {
@@ -57,5 +53,12 @@ export class RecipeNewComponent implements OnInit, FormInitizable, Submittable {
 
   onCancel() {
     this._router.navigate(["/"]);
+  }
+
+  protected createIngredientForm(name: string, amount: number): FormGroup {
+    return new FormGroup({
+      'name': new FormControl(name, Validators.required),
+      'amount': new FormControl(amount, [Validators.required, Validators.pattern(/^\d+$/)])
+    })
   }
 }

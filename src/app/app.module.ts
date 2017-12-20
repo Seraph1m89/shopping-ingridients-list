@@ -21,6 +21,7 @@ import { SelectRecipeComponent } from './recipes/select-recipe/select-recipe.com
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RecipeNewComponent } from './recipes/recipe-new/recipe-new.component';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -36,13 +37,14 @@ import { RecipeNewComponent } from './recipes/recipe-new/recipe-new.component';
     SelectRecipeComponent,
     RecipeEditComponent,
     ErrorPageComponent,
-    RecipeNewComponent,
+    RecipeNewComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpModule
   ],
   providers: [ShoppingListService, RecipeResolver, RecipeService],
   bootstrap: [AppComponent]

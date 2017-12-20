@@ -5,13 +5,13 @@ export class Recipe {
     public name: string;
     public description: string;
     public imagePath: string;
-    public id: number;
+    public id: string;
 
-    constructor(id: number, name: string, description: string, imagePath: string, ingredients: Ingredient[]) {
+    constructor(id: string, name: string, description: string, imagePath: string, ingredients: Ingredient[]) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.imagePath = imagePath;
         this.ingredients = ingredients;
-        this.id = id;
     }
 }

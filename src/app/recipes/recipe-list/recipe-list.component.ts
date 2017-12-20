@@ -13,15 +13,22 @@ import { Subscription } from 'rxjs/Subscription';
 export class RecipeListComponent implements OnInit, OnDestroy {
   private _subscription: Subscription;
 
-  recipes: Recipe[];
+  recipes: Recipe[] = [];
 
   constructor(private _recipeService: RecipeService, private _router: Router,
   private _activeRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.recipes = this._recipeService.getRecipes();
-    this._subscription = this._recipeService.recipesChanged.subscribe((recipes) => {
-      this.recipes = recipes;
+    this._recipeService.getRecipes().subscribe(
+      (data) => this.recipes = data,
+      (error) => console.log(error)
+    );
+    this._subscription = this._recipeService.recipesChanged
+    .subscribe((subscription) => {
+      subscription.subscribe(
+        (data) => this.recipes = data,
+        (error) => console.log(error)
+      );
     });
   }
 

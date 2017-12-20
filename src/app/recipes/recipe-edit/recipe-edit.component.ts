@@ -20,7 +20,6 @@ export class RecipeEditComponent extends RecipeNewComponent {
 
   onSubmit() {
     this.updateRecipe(this.recipeForm.value)
-    this.navigateToDetails();
   }
 
   navigateToDetails() {
@@ -40,7 +39,10 @@ export class RecipeEditComponent extends RecipeNewComponent {
   }
 
   private updateRecipe(recipe: Recipe) {
-    this._recipeService.updateRecipe(this.recipe.id, recipe);
+    this._recipeService.updateRecipe(this.recipe.id, recipe).subscribe(
+      responce => this.navigateToDetails(),
+      error => console.log(error)
+    );
   }
 
   initializeForm() {
@@ -49,12 +51,11 @@ export class RecipeEditComponent extends RecipeNewComponent {
     this.recipeForm.get("name").setValue(this.recipe.name);
     this.recipeForm.get("imagePath").setValue(this.recipe.imagePath);
     this.recipeForm.get("description").setValue(this.recipe.description);
-    this.recipe.ingredients.forEach((ingredient) => {
-      (<FormArray>this.recipeForm.get("ingredients")).push(new FormGroup({
-        'name': new FormControl(ingredient.name, Validators.required),
-        'amount': new FormControl(ingredient.amount,
-          [Validators.required, Validators.pattern(/^\d+$/)])
-      }));
-    });
+    if(this.recipe.ingredients) {
+      this.recipe.ingredients.forEach((ingredient) => {
+        (<FormArray>this.recipeForm.get("ingredients"))
+        .push(super.createIngredientForm(ingredient.name, ingredient.amount));
+      });
+    }
   }
 }

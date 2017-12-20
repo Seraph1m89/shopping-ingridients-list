@@ -9,7 +9,7 @@ export class RecipeResolver implements Resolve<Recipe>{
     constructor(private _recipeService: RecipeService){}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Recipe | Observable<Recipe> | Promise<Recipe> {
-        return this._recipeService.getRecipe(+route.params['id']);
+        return this._recipeService.getRecipe(<string>route.params['id']);
         // return this._recipeService.getRecipes();
     }
 }

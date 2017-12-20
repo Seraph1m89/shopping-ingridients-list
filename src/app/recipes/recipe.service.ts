@@ -1,69 +1,70 @@
-import { EventEmitter, OnInit } from "@angular/core";
+import { EventEmitter, OnInit, Injectable } from "@angular/core";
 import { Recipe } from "./recipe.model";
 import { Ingredient } from "../shared/ingridient";
 import { Subject } from "rxjs/Subject";
+import * as uuid from "uuid/v4";
+import { Http, Response } from "@angular/http";
+import "rxjs/Rx";
+import { Observable } from "rxjs/Observable";
+import { Subscription } from "rxjs/Subscription";
 
+@Injectable()
 export class RecipeService {
 
-    recipesChanged = new Subject<Recipe[]>();
+    recipesChanged = new Subject<Observable<Recipe[]>>();
 
-    private _recipes: Recipe[] = [
-        new Recipe(1, 
-            "Pancakes",
-            "Yummi",
-            "https://images.unsplash.com/photo-1478369402113-1fd53f17e8b4?auto=format&fit=crop&w=600&q=60&",
-            [
-                new Ingredient("Flour", 2),
-                new Ingredient("Sugar", 1)
-            ]),
-        new Recipe(2,
-            "Burger", "Twice as Yummi", "https://images.unsplash.com/photo-1504185945330-7a3ca1380535?auto=format&amp;fit=crop&amp;w=321&amp;q=80",
-            [
-                new Ingredient("Bread", 2),
-                new Ingredient("Meat", 1)
-            ])
-    ];
+    constructor(private _http: Http) {}
 
     // recipeSelected = new EventEmitter<Recipe>();
 
     getRecipes() {
-        return this._recipes.slice();
-    }
-
-    getRecipe(id: number) {
-        return this._recipes.find(recipe => recipe.id === id);
-    }
-
-    addRecipe(recipeData: Recipe): Recipe {
-        const newRecipe = new Recipe(this._recipes.length + 1, recipeData.name, 
-            recipeData.description, recipeData.imagePath, recipeData.ingredients)
-        this._recipes.push(newRecipe);
-        this.recipesChanged.next(this.getRecipes());
-        this.updateIDs();        
-        return newRecipe;     
-    }
-
-    updateRecipe(id: number, recipeData: Recipe) {
-        const newRecipe = new Recipe(id, recipeData.name, recipeData.description, recipeData.imagePath, recipeData.ingredients);
-        this._recipes[id - 1] = newRecipe;
-        this.updateIDs();        
-        this.recipesChanged.next(this.getRecipes());
-    }
-
-    removeRecipe(id: number) {
-        var recipeIndexToDelete = this._recipes.findIndex((recipe) => {
-            return recipe.id === id;
+        return this._http.get("https://recipe-list-2caaa.firebaseio.com/data.json")
+        .map((responce: Response) => {
+            let recipes = [];
+            const data = responce.json();
+            Object.keys(data).forEach(key => {
+                const recipe = new Recipe(key, data[key]["name"], 
+                data[key]["description"], 
+                data[key]["imagePath"], 
+                data[key]["ingredients"])
+                recipes.push(recipe);
+            }); 
+            return recipes;
         });
-        if(recipeIndexToDelete !== -1) {
-            this._recipes.splice(recipeIndexToDelete, 1);
-        }
-        this.updateIDs();
-        this.recipesChanged.next(this._recipes);
     }
 
-    private updateIDs() {
-        for(var i = 0; i < this._recipes.length;) {
-            this._recipes[i].id = ++i;
-        }
+    getRecipe(id: string) {
+        return this._http.get(`https://recipe-list-2caaa.firebaseio.com/data/${id}.json`)
+        .map((response:Response) => {
+            const data = response.json()
+            return new Recipe(id, 
+                data["name"],
+                data["description"], 
+                data["imagePath"], 
+                data["ingredients"])
+        });
+    }
+
+    addRecipe(recipeData: Recipe): Observable<string> {
+        return this._http.post("https://recipe-list-2caaa.firebaseio.com/data.json", recipeData)
+        .map((response: Response) => {
+            const data = response.json();
+            this.recipesChanged.next(this.getRecipes());
+            return <string>data["name"];
+        });
+    }
+
+    updateRecipe(id: string, recipeData: Recipe) {
+        return this._http.put(`https://recipe-list-2caaa.firebaseio.com/data/${id}.json`, recipeData)
+        .map(responce => this.recipesChanged.next(this.getRecipes()));
+    }
+
+    removeRecipe(id: string): Observable<Response> {
+        return this._http.delete(`https://recipe-list-2caaa.firebaseio.com/data/${id}.json`)
+            .map((responce: Response) => {
+                this.recipesChanged.next(this.getRecipes());
+                return responce;
+            }
+            );
     }
 }
