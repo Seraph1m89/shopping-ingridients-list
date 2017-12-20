@@ -7,6 +7,7 @@ import { Http, Response } from "@angular/http";
 import "rxjs/Rx";
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
+import { error } from "util";
 
 @Injectable()
 export class RecipeService {
@@ -37,6 +38,9 @@ export class RecipeService {
         return this._http.get(`https://recipe-list-2caaa.firebaseio.com/data/${id}.json`)
         .map((response:Response) => {
             const data = response.json()
+            if(!data) {
+                throw new Error("Data is empty");
+            }
             return new Recipe(id, 
                 data["name"],
                 data["description"], 
