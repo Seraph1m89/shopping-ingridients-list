@@ -22,6 +22,10 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RecipeNewComponent } from './recipes/recipe-new/recipe-new.component';
 import { HttpModule } from '@angular/http';
+import { SignupComponent } from './auth/signup/signup.component';
+import { LoginComponent } from './auth/login/login.component';
+import { AuthenticationService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +41,9 @@ import { HttpModule } from '@angular/http';
     SelectRecipeComponent,
     RecipeEditComponent,
     ErrorPageComponent,
-    RecipeNewComponent
+    RecipeNewComponent,
+    SignupComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +52,7 @@ import { HttpModule } from '@angular/http';
     ReactiveFormsModule,
     HttpModule
   ],
-  providers: [ShoppingListService, RecipeResolver, RecipeService],
+  providers: [ShoppingListService, RecipeResolver, RecipeService, AuthenticationService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
