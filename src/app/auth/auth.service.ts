@@ -40,7 +40,7 @@ export class AuthenticationService {
     }
 
     isAuthenticated() {
-        if(firebase.auth().currentUser) {
+        if(!firebase.auth().currentUser) {
             return false;
         } else {
             return true;
