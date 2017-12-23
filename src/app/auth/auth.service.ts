@@ -36,7 +36,7 @@ export class AuthenticationService {
     }
 
     getToken() {
-        return Observable.fromPromise(firebase.auth().currentUser.getToken());
+        return Observable.fromPromise(firebase.auth().currentUser.getIdToken());
     }
 
     isAuthenticated() {

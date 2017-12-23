@@ -9,6 +9,8 @@ import { RecipeService } from "../recipes/recipe.service";
 import { AuthenticationService } from "../auth/auth.service";
 import { AuthGuard } from "../auth/auth-guard.service";
 import { RecipeResolver } from "../recipes/recipe-resolver.service";
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { AuthInteceptor } from "../shared/auth.interceptor";
 
 @NgModule({
     declarations: [
@@ -24,13 +26,14 @@ import { RecipeResolver } from "../recipes/recipe-resolver.service";
         AppRoutingModule,
         HeaderComponent,
         SharedModule
-    ], 
+    ],
     providers: [
-        ShoppingListService, 
-        RecipeService, 
-        AuthenticationService, 
-        AuthGuard, 
-        RecipeResolver],
+        ShoppingListService,
+        RecipeService,
+        AuthenticationService,
+        AuthGuard,
+        RecipeResolver,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInteceptor, multi: true }]
 })
 export class CoreModule {
 
