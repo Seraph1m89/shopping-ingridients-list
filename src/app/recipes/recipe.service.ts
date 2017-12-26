@@ -52,7 +52,7 @@ export class RecipeService {
     }
 
     addRecipe(recipeData: Recipe): Observable<string> {
-        return this._authService.getToken().flatMap((token: Token) => this._http.post("https://recipe-list-2caaa.firebaseio.com/data.json", 
+        return this._authService.getToken().flatMap((token: string) => this._http.post("https://recipe-list-2caaa.firebaseio.com/data.json", 
         recipeData)
             .map((data) => {
                 this.recipesChanged.next(this.getRecipes());
@@ -61,14 +61,14 @@ export class RecipeService {
     }
 
     updateRecipe(id: string, recipeData: Recipe) {
-        return this._authService.getToken().flatMap((token: Token) => this._http
+        return this._authService.getToken().flatMap((token: string) => this._http
         .put(`https://recipe-list-2caaa.firebaseio.com/data/${id}.json`, 
         recipeData)
             .do(responceBody => this.recipesChanged.next(this.getRecipes())));
     }
 
     removeRecipe(id: string): Observable<any> {
-        return this._authService.getToken().flatMap((token: Token) => this._http.delete(`https://recipe-list-2caaa.firebaseio.com/data/${id}.json`)
+        return this._authService.getToken().flatMap((token: string) => this._http.delete(`https://recipe-list-2caaa.firebaseio.com/data/${id}.json`)
             .do((responceBody) => {
                 this.recipesChanged.next(this.getRecipes());
                 return responceBody;

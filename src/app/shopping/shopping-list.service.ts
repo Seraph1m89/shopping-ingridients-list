@@ -5,15 +5,11 @@ import { Store } from "@ngrx/store";
 import * as ShoppingListActions from "./store/shopping-list.actions";
 import * as IngredientActionType from "./store/ingridient-actions.constants";
 import { Observable } from "rxjs/Observable";
-import { ShoppingListState, AppState } from "./store/shopping-list.reducer";
+import { ShoppingListState } from "./store/shopping-list.reducer";
+import { AppState } from "../store/app.state";
 
 @Injectable()
 export class ShoppingListService {
-    private _ingredients: Ingredient[] = [
-        new Ingredient("Chicken breast", 120),
-        new Ingredient("Tomatos", 2)
-    ];
-
     private _ingredientState: Observable<{ingredients: Ingredient[]}>;
 
     constructor(private _store: Store<AppState>) {

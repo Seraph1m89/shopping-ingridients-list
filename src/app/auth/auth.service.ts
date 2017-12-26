@@ -4,12 +4,16 @@ import { OnInit, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { User } from 'firebase';
 import { Router } from '@angular/router';
+import { AppState } from '../store/app.state';
+import { Store } from '@ngrx/store';
+import { AuthState } from './store/auth.reducer';
+import { Login, Logout } from './store/auth.actions';
 
 @Injectable()
 export class AuthenticationService {
-    authenticationChanged = new Subject<User>();
+    private _authState: Observable<AuthState>;
 
-    constructor(private _router: Router) {
+    constructor(private _router: Router, private _store: Store<AppState>) {
         if (!firebase.apps.length) {
             firebase.initializeApp({
                 apiKey: "AIzaSyDeKKNP0if90CNJ46fBa6JQgO7Cw02RPOo",
@@ -17,7 +21,15 @@ export class AuthenticationService {
             });
         }
         
-        firebase.auth().onAuthStateChanged(user => this.authenticationChanged.next(user));
+        this._authState = this._store.select("authentication");
+        firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+                user.getIdToken()
+                 .then((token: string) => this._store.dispatch(new Login(token)));
+            } else {
+                this._store.dispatch(new Logout())
+            }
+        });
     }
 
     signupUser(email: string, password: string) {
@@ -36,14 +48,10 @@ export class AuthenticationService {
     }
 
     getToken() {
-        return Observable.fromPromise(firebase.auth().currentUser.getIdToken());
+        return this._authState.take(1).map(state => state.token);
     }
 
     isAuthenticated() {
-        if(!firebase.auth().currentUser) {
-            return false;
-        } else {
-            return true;
-        }
+        return this._authState.map(state => state.isLoggedIn);
     }
 }

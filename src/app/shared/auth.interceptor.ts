@@ -15,7 +15,7 @@ export class AuthInteceptor implements HttpInterceptor {
         }
 
         return this._authService.getToken()
-            .flatMap(token => {
+            .switchMap(token => {
                 const requestCopy = req.clone({params: req.params.set("auth", token)});
                 return next.handle(requestCopy);
             });

@@ -5,6 +5,8 @@ import { AuthenticationRoutingModule } from "./authentication-routng.module";
 import { SharedModule } from "../shared/shared.module";
 import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { StoreModule } from "@ngrx/store";
+import { authReducer } from "./store/auth.reducer";
 
 @NgModule({
     declarations: [
@@ -14,7 +16,8 @@ import { CommonModule } from "@angular/common";
     imports: [
         CommonModule,
         AuthenticationRoutingModule,
-        FormsModule        
+        FormsModule,
+        StoreModule.forFeature("authentication", authReducer)       
     ]
 })
 export class AuthenticationModule {}

@@ -2,6 +2,9 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'firebase';
 import { AuthenticationService } from '../../auth/auth.service';
+import { AppState } from '../../store/app.state';
+import { Store } from '@ngrx/store';
+import { AuthState } from '../../auth/store/auth.reducer';
 
 @Component({
   selector: 'app-header',
@@ -9,24 +12,16 @@ import { AuthenticationService } from '../../auth/auth.service';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  // @Output() switchList = new EventEmitter<string>();
 
-  isAuthenticated: boolean;
+  authState: Observable<AuthState>;
 
-  constructor(private _authService: AuthenticationService) { }
+  constructor(private _authService: AuthenticationService, private _store: Store<AppState>) {}
 
   ngOnInit() {
-    // this._authService.isAuthenticated().subscribe(result => this.isAuthenticated = result);
-    this._authService.authenticationChanged.subscribe((user: User) => {
-      user ? this.isAuthenticated = true : this.isAuthenticated = false;
-    });
+    this.authState = this._store.select("authentication")
   }
 
   onLogout() {
     this._authService.logout();
   }
-
-  // onSwitchList(list: string) {
-  //   this.switchList.emit(list);
-  // }
 }

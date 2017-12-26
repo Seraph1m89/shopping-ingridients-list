@@ -9,10 +9,10 @@
         <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <ng-template [ngIf]="isAuthenticated">
+        <ng-template [ngIf]="(authState | async)?.isLoggedIn">
           <li><a (click)="onLogout()">Logout</a></li>
         </ng-template>
-        <ng-template [ngIf]="!isAuthenticated">
+        <ng-template [ngIf]="!(authState | async)?.isLoggedIn">
             <li><a routerLink="/login">Login</a></li>
             <li><a routerLink="/signup">Signup</a></li>
         </ng-template>
