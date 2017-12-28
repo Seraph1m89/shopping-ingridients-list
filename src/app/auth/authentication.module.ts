@@ -7,6 +7,8 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { StoreModule } from "@ngrx/store";
 import { authReducer } from "./store/auth.reducer";
+import { EffectsModule } from "@ngrx/effects";
+import { AuthEffects } from "./store/auth.effects";
 
 @NgModule({
     declarations: [
@@ -17,7 +19,8 @@ import { authReducer } from "./store/auth.reducer";
         CommonModule,
         AuthenticationRoutingModule,
         FormsModule,
-        StoreModule.forFeature("authentication", authReducer)       
+        StoreModule.forFeature("authentication", authReducer),
+        EffectsModule.forFeature([AuthEffects])  
     ]
 })
 export class AuthenticationModule {}

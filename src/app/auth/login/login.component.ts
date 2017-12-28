@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthenticationService } from '../auth.service';
+import { AppState } from '../../store/app.state';
+import { Store } from '@ngrx/store';
+import { TryLogin } from '../store/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +13,7 @@ export class LoginComponent implements OnInit {
 
   buttonText = "Login";
 
-  constructor(private _authService: AuthenticationService) { }
+  constructor(private _store: Store<AppState>) { }
 
   ngOnInit() {
   }
@@ -19,7 +21,7 @@ export class LoginComponent implements OnInit {
   onSubmit(form: NgForm) {
     const email = form.value.email;
     const password = form.value.password;
-    this._authService.login(email, password);
+    this._store.dispatch(new TryLogin({username: email, password}))
   }
 
 }

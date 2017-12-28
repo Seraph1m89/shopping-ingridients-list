@@ -1,10 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { User } from 'firebase';
-import { AuthenticationService } from '../../auth/auth.service';
 import { AppState } from '../../store/app.state';
 import { Store } from '@ngrx/store';
 import { AuthState } from '../../auth/store/auth.reducer';
+import { Logout } from '../../auth/store/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -15,13 +15,13 @@ export class HeaderComponent implements OnInit {
 
   authState: Observable<AuthState>;
 
-  constructor(private _authService: AuthenticationService, private _store: Store<AppState>) {}
+  constructor(private _store: Store<AppState>) {}
 
   ngOnInit() {
     this.authState = this._store.select("authentication")
   }
 
   onLogout() {
-    this._authService.logout();
+    this._store.dispatch(new Logout());
   }
 }
