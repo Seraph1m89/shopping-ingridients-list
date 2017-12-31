@@ -8,6 +8,7 @@ import { switchMap } from "rxjs/operators/switchMap";
 import { AuthState } from "./auth.reducer";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../store/app.state";
+import "rxjs/Rx";
 
 @Injectable()
 export class AuthEffects {
@@ -62,4 +63,10 @@ export class AuthEffects {
                 payload: token
             }
         });
+
+    @Effect()
+    authLogout = this._actions$
+        .ofType(AuthAction.TRY_LOGOUT)
+        .do(() => firebase.auth().signOut())
+        .map(() => {return {type: AuthAction.LOGOUT}});
 }

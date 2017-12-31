@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Recipe } from '../recipe.model';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
-import { RecipeService } from '../recipe.service';
 import { RecipeNewComponent } from '../recipe-new/recipe-new.component';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app.state';
+import { TryUpdateRecipe } from '../store/recipes.actions';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -14,12 +16,13 @@ export class RecipeEditComponent extends RecipeNewComponent {
 
   recipe: Recipe;
 
-  constructor(private _activeRoute: ActivatedRoute, recipeService: RecipeService, router: Router) {
-    super(recipeService, router);
+  constructor(private _activeRoute: ActivatedRoute, router: Router, store: Store<AppState>) {
+    super(router, store);
   }
 
   onSubmit() {
-    this.updateRecipe(this.recipeForm.value)
+    var id = this._activeRoute.snapshot.params['id'];
+    this.updateRecipe(id, this.recipeForm.value);
   }
 
   navigateToDetails() {
@@ -38,11 +41,9 @@ export class RecipeEditComponent extends RecipeNewComponent {
     this._router.navigate(["../"], {relativeTo: this._activeRoute});
   }
 
-  private updateRecipe(recipe: Recipe) {
-    this._recipeService.updateRecipe(this.recipe.id, recipe).subscribe(
-      responce => this.navigateToDetails(),
-      error => console.log(error)
-    );
+  private updateRecipe(id: string, recipeData: Recipe) {
+    recipeData.id = id;
+    this._store.dispatch(new TryUpdateRecipe(recipeData));
   }
 
   initializeForm() {

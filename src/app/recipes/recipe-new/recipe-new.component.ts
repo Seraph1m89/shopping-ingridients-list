@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { RecipeService } from '../recipe.service';
 import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { FormInitizable } from '../Interfaces/form-initializer.interface';
 import { Recipe } from '../recipe.model';
 import { Submittable } from '../Interfaces/submittable.interface';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app.state';
+import { RecipesState } from '../store/recipe.reducer';
+import { AddRecipe, TryAddRecipe } from '../store/recipes.actions';
 
 @Component({
   selector: 'app-recipe-new',
@@ -15,9 +18,12 @@ export class RecipeNewComponent implements OnInit, FormInitizable, Submittable {
 
   recipeForm: FormGroup;  
 
-  constructor(protected _recipeService: RecipeService, protected _router: Router) { }
+  protected _recipeState: Store<RecipesState>;
+
+  constructor(protected _router: Router, protected _store: Store<AppState>) { }
 
   ngOnInit() {
+    this._recipeState = this._store.select("recipes");
     this.initializeForm();
   }
 
@@ -44,7 +50,7 @@ export class RecipeNewComponent implements OnInit, FormInitizable, Submittable {
   }
 
   private addRecipe(recipe: Recipe) {
-    this._recipeService.addRecipe(recipe).subscribe((id) => this.navigateToDetails(id));
+    this._store.dispatch(new TryAddRecipe(recipe));
   }
 
   onDeleteIngredient(index: number) {

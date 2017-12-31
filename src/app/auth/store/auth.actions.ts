@@ -20,4 +20,8 @@ export class TrySignup implements Action {
     constructor(public payload: {username: string, password: string}) {}
 }
 
-export type AuthenticationAction = Logout | Login | TryLogin;
+export class TryLogout implements Action {
+    readonly type = AuthActionType.TRY_LOGOUT;
+}
+
+export type AuthenticationAction = Logout | Login | TryLogin | TryLogout;

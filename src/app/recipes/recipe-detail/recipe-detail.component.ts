@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipe } from '../recipe.model';
-import { RecipeService } from '../recipe.service';
 import { ShoppingListService } from '../../shopping/shopping-list.service';
 import { ActivatedRoute, Data, Router } from '@angular/router';
+import { AppState } from '../../store/app.state';
+import { Store } from '@ngrx/store';
+import { TryDeleteRecipe } from '../store/recipes.actions';
+import { Observable } from 'rxjs/Observable';
+import { RecipesState } from '../store/recipe.reducer';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -10,17 +14,26 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
   styleUrls: ['./recipe-detail.component.css']
 })
 export class RecipeDetailComponent implements OnInit {
-
+  recipesState: Observable<RecipesState>;
+  routeId: string;
   selectedRecipe: Recipe;
 
-  constructor(private _shoppingListService: ShoppingListService, private _activeRoute: ActivatedRoute, private _router: Router, private _recipeService: RecipeService) { }
+  constructor(private _shoppingListService: ShoppingListService, private _activeRoute: ActivatedRoute, private _router: Router, private _store: Store<AppState>) { }
 
   ngOnInit() {
-    this._activeRoute.data.subscribe(
-      (data: Data) => {
-        this.selectedRecipe = data['recipe'];
-      }
-    );
+    this.recipesState = this._store.select("recipes");
+    this._activeRoute.params.subscribe(
+      params => { var id = <string>params["id"];
+       this.recipesState.take(1).subscribe
+       (state => this.selectedRecipe = state.recipes.find(recipe => recipe.id === id));
+    }
+
+    )
+    // this._activeRoute.data.subscribe(
+    //   (data: Data) => {
+    //     this.selectedRecipe = data['recipe'];
+    //   }
+    // );
   }
 
   onAddToShoppingList() {
@@ -32,7 +45,7 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onDeleteRecipe() {
-    this._recipeService.removeRecipe(this.selectedRecipe.id).subscribe();
+    this._store.dispatch(new TryDeleteRecipe(this.selectedRecipe.id));
     this._router.navigate(['../'], { relativeTo: this._activeRoute });
   }
 }

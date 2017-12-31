@@ -4,7 +4,7 @@ import { User } from 'firebase';
 import { AppState } from '../../store/app.state';
 import { Store } from '@ngrx/store';
 import { AuthState } from '../../auth/store/auth.reducer';
-import { Logout } from '../../auth/store/auth.actions';
+import { Logout, TryLogout } from '../../auth/store/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -18,10 +18,10 @@ export class HeaderComponent implements OnInit {
   constructor(private _store: Store<AppState>) {}
 
   ngOnInit() {
-    this.authState = this._store.select("authentication")
+    this.authState = this._store.select("authentication");
   }
 
   onLogout() {
-    this._store.dispatch(new Logout());
+    this._store.dispatch(new TryLogout());
   }
 }

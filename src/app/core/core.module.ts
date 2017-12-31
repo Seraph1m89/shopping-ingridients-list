@@ -5,7 +5,6 @@ import { SharedModule } from "../shared/shared.module";
 import { AppRoutingModule } from "../app-routing.module";
 import { ErrorPageComponent } from "./error-page/error-page.component";
 import { ShoppingListService } from "../shopping/shopping-list.service";
-import { RecipeService } from "../recipes/recipe.service";
 import { AuthGuard } from "../auth/auth-guard.service";
 import { RecipeResolver } from "../recipes/recipe-resolver.service";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
@@ -28,7 +27,6 @@ import { AuthInteceptor } from "../shared/auth.interceptor";
     ],
     providers: [
         ShoppingListService,
-        RecipeService,
         AuthGuard,
         RecipeResolver,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInteceptor, multi: true }]
