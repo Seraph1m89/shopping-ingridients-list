@@ -15,7 +15,6 @@ import { RecipesState } from '../store/recipe.reducer';
 })
 export class RecipeDetailComponent implements OnInit {
   recipesState: Observable<RecipesState>;
-  routeId: string;
   selectedRecipe: Recipe;
 
   constructor(private _shoppingListService: ShoppingListService, private _activeRoute: ActivatedRoute, private _router: Router, private _store: Store<AppState>) { }
@@ -27,13 +26,7 @@ export class RecipeDetailComponent implements OnInit {
        this.recipesState.take(1).subscribe
        (state => this.selectedRecipe = state.recipes.find(recipe => recipe.id === id));
     }
-
     )
-    // this._activeRoute.data.subscribe(
-    //   (data: Data) => {
-    //     this.selectedRecipe = data['recipe'];
-    //   }
-    // );
   }
 
   onAddToShoppingList() {

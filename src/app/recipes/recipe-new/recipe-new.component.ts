@@ -28,8 +28,7 @@ export class RecipeNewComponent implements OnInit, FormInitizable, Submittable {
   }
 
   onSubmit() {
-    var recipe = this.addRecipe(this.recipeForm.value);
-    
+    this.addRecipe(this.recipeForm.value);
   }
 
   initializeForm() {
