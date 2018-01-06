@@ -9,6 +9,7 @@ import { AuthGuard } from "../auth/auth-guard.service";
 import { RecipeResolver } from "../recipes/recipe-resolver.service";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
 import { AuthInteceptor } from "../shared/auth.interceptor";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 @NgModule({
     declarations: [
@@ -18,7 +19,8 @@ import { AuthInteceptor } from "../shared/auth.interceptor";
     ],
     imports: [
         SharedModule,
-        AppRoutingModule
+        AppRoutingModule,
+        BrowserAnimationsModule
     ],
     exports: [
         AppRoutingModule,

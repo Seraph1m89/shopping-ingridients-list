@@ -4,11 +4,27 @@ import { Ingredient } from '../../shared/ingridient';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { ShoppingListState } from '../store/shopping-list.reducer';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
-  styleUrls: ['./shopping-list.component.css']
+  styleUrls: ['./shopping-list.component.css'],
+  animations: [
+    trigger('shoppingListItem', [
+      transition("void => *", [
+        style({
+          opacity: 1,
+          transform: "translateX(-100px)"
+        }),
+        animate(500)
+      ]),
+      transition("* => void", animate(500, style({
+        opacity: 0,
+        transform: "translateX(100px)"
+      })))
+    ])
+  ]
 })
 export class ShoppingListComponent implements OnInit {
 
