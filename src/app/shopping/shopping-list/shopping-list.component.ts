@@ -14,7 +14,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
     trigger('shoppingListItem', [
       transition("void => *", [
         style({
-          opacity: 1,
+          opacity: 0,
           transform: "translateX(-100px)"
         }),
         animate(500)

@@ -8,11 +8,28 @@ import { Store } from '@ngrx/store';
 import { FetchRecipes } from '../store/recipes.actions';
 import { RecipesState } from '../store/recipe.reducer';
 import { Observable } from 'rxjs/Observable';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-recipe-list',
   templateUrl: './recipe-list.component.html',
-  styleUrls: ['./recipe-list.component.css']
+  styleUrls: ['./recipe-list.component.css'],
+  animations: [
+    trigger('recipeListItem', [
+      transition("void => *", [
+        style({
+          opacity: 0,
+          color: 'red',
+          transform: "translateX(-100px)"
+        }),
+        animate(500)
+      ]),
+      transition("* => void", animate(500, style({
+        opacity: 0,
+        transform: "translateX(-100px)"
+      })))
+    ])
+  ]
 })
 export class RecipeListComponent implements OnInit {
   recipesState: Observable<RecipesState>;
